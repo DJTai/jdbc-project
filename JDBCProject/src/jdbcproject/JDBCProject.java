@@ -87,8 +87,8 @@ public class JDBCProject {
             statement = connection.createStatement();
             String sql;
             ResultSet resultSet;
-
-            sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
+//            sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
+            sql = "SELECT * FROM Authors";
             resultSet = statement.executeQuery(sql);
 
             // STEP 5: Extract data from the result set

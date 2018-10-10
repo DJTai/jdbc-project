@@ -87,8 +87,8 @@ public class JDBCProject {
             statement = connection.createStatement();
             String sql;
             ResultSet resultSet;
-
-            sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
+//            sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
+            sql = "SELECT * FROM Authors";
             resultSet = statement.executeQuery(sql);
 
             // STEP 5: Extract data from the result set
@@ -97,9 +97,9 @@ public class JDBCProject {
             while (resultSet.next()) {
                 // Retrieve by column name
                 String id = resultSet.getString("au_id");
-                String phone = resultSet.getString("phone");
                 String first = resultSet.getString("au_fname");
                 String last = resultSet.getString("au_lname");
+                String phone = resultSet.getString("phone");
 
                 // Display values
                 System.out.printf(DISPLAY_FORMAT,

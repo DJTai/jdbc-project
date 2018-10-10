@@ -5,9 +5,9 @@ CREATE TABLE publishers (
 	publisherphone VARCHAR(20) NOT NULL, -- Phone number of the publisher
 	publisheremail VARCHAR(40) NOT NULL, -- Email address of the publisher
 	CONSTRAINT publishers_pk
-	PRIMARY KEY(publishername));
+	PRIMARY KEY(publishername)
+);
 	
-
 -- Holds the group's name, head writer, year formed, and subject they write about
 CREATE TABLE writingGroups(
     groupName VARCHAR(30) NOT NULL,  -- Name of the group
@@ -33,4 +33,35 @@ CREATE TABLE books(
     CONSTRAINT books_fk02 FOREIGN KEY (publisherName)
         REFERENCES publishers(publisherName)
 );
-    
+
+-- Test values for WRITING GROUPS table
+INSERT INTO writingGroups(groupName, headWriter, yearFormed, subject)
+VALUES ('Riders Block', 'Chelsea Marfil', 2018, 'Fiction'),
+('Avengers Writers', 'Jason Aaron', 1937, 'Comics'),
+('W.W. Writers', 'James Tynion IV', 1934, 'Comics'),
+('Spawn Writers', 'Todd McFarlane', 1992, 'Comics'),
+('Comment Blocks', 'David Taitingfong', 2018, 'Non-fiction'),
+('To Be Or Not To Be', 'William S', 1616, 'Poetry'),
+('Read Wine', 'Rafi Feliciano', 2016, 'History'),
+('Left on Read', 'Chelsea Marfil', 2016, 'Science Fiction'),
+('Riding Writers', 'William Harley', 1903, 'History'),
+('Only SQLs', 'Dave Brown', 2012, 'Non-fiction'),
+('LOL', 'Tina Fey', 2016, 'Humor'),
+('Psyched Out', 'Malcolm Gladwell', 2012, 'Self-Help'),
+('Mozilla', 'Mitchell Baker', 2005, 'Business'),
+('Found My Fitness', 'Rhonda Patrick', 2012, 'Nutrition'),
+('Nutrition Facts', 'Michael Greger', 2000, 'Nutrition'),
+('Sleeping At Terminals', 'Tom Hanks', 2000, 'Travel'),
+('Read-N-Out', 'Lynsi Snyder', 2013, 'Business'),
+('Pen & Tell', 'David Taitingfong', 2016, 'Humor');
+
+-- Test values for PUBLISHERS table
+INSERT INTO publishers(publisherName, publisherAddress, publisherPhone,
+publisherEmail)
+VALUES ('Marvel Comics', '500 Marvelous Way', '562-555-1234', 'marvel@marvel.com'),
+VALUES ('DC Comics', '777 Dark Knight Ln', '', ''),
+VALUES ('', '', '', ''),
+VALUES ('', '', '', ''),
+VALUES ('', '', '', ''),
+VALUES ('', '', '', '');
+

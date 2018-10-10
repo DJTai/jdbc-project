@@ -1,10 +1,9 @@
 -- Table publishers holds a publisher's name, their address, their phone number, and their email address.
--- 
 CREATE TABLE publishers (
-	publishername VARCHAR(40) NOT NULL,
-	publisheraddress VARCHAR(50) NOT NULL,
-	publisherphone VARCHAR(20) NOT NULL,
-	publisheremail VARCHAR(40) NOT NULL,
+	publishername VARCHAR(40) NOT NULL, -- Name of the publisher
+	publisheraddress VARCHAR(50) NOT NULL, -- Address of the publisher
+	publisherphone VARCHAR(20) NOT NULL, -- Phone number of the publisher
+	publisheremail VARCHAR(40) NOT NULL, -- Email address of the publisher
 	CONSTRAINT publishers_pk
 	PRIMARY KEY(publishername));
 	

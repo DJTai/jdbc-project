@@ -58,10 +58,13 @@ VALUES ('Riders Block', 'Chelsea Marfil', 2018, 'Fiction'),
 -- Test values for PUBLISHERS table
 INSERT INTO publishers(publisherName, publisherAddress, publisherPhone,
 publisherEmail)
-VALUES ('Marvel Comics', '500 Marvelous Way', '562-555-1234', 'marvel@marvel.com'),
-VALUES ('DC Comics', '777 Dark Knight Ln', '', ''),
-VALUES ('', '', '', ''),
-VALUES ('', '', '', ''),
-VALUES ('', '', '', ''),
-VALUES ('', '', '', '');
+VALUES ('Marvel Comics', '500 Marvelous Way', '917-555-1234', 'marvel@marvel.com'),
+('DC Comics', '777 Dark Knight Ln', '818-777-5454', 'dc-comics@comics.com'),
+('2Leaf Press ', '5653 Tree Way', '619-343-1005', '2leafpress@gmail.com'),
+('Random House Inc.', '900 Predictable Blvd', '858-777-7777', 'contact@randomhouse.com'),
+('McGraw-Hill Education', '820 Broadway', '310-394-3504', 'publishing@mcgraw.edu'),
+('No Starch Press', '1233 Howard St', '415-863-9900', 'contact@nostarchpress.com'),
+('Capcom Publishing', '185 Berry St #1200', '650-350-6500', 'contact@capcom.com'),
+('Philosophers Stone', '1000 Rocky Road', '868-565-3434', 'philosopers@stonepub.org'),
+('Wolters Kluwer', '20101 Hamilton Ave', '310-324-3019', 'wolters.kluwer@gmail.com');
 

@@ -39,15 +39,11 @@ INSERT INTO writingGroups(groupName, headWriter, yearFormed, subject)
 VALUES ('Riders Block', 'Chelsea Marfil', 2018, 'Fiction'),
 ('Avengers Writers', 'Jason Aaron', 1937, 'Comics'),
 ('W.W. Writers', 'James Tynion IV', 1934, 'Comics'),
-('Spawn Writers', 'Todd McFarlane', 1992, 'Comics'),
 ('Comment Blocks', 'David Taitingfong', 2018, 'Non-fiction'),
 ('To Be Or Not To Be', 'William S', 1616, 'Poetry'),
-('Read Wine', 'Rafi Feliciano', 2016, 'History'),
 ('Left on Read', 'Chelsea Marfil', 2016, 'Science Fiction'),
 ('Riding Writers', 'William Harley', 1903, 'History'),
 ('Only SQLs', 'Dave Brown', 2012, 'Non-fiction'),
-('LOL', 'Tina Fey', 2016, 'Humor'),
-('Psyched Out', 'Malcolm Gladwell', 2012, 'Self-Help'),
 ('Mozilla', 'Mitchell Baker', 2005, 'Business'),
 ('Found My Fitness', 'Rhonda Patrick', 2012, 'Nutrition'),
 ('Nutrition Facts', 'Michael Greger', 2000, 'Nutrition'),
@@ -67,4 +63,6 @@ VALUES ('Marvel Comics', '500 Marvelous Way', '917-555-1234', 'marvel@marvel.com
 ('Capcom Publishing', '185 Berry St #1200', '650-350-6500', 'contact@capcom.com'),
 ('Philosophers Stone', '1000 Rocky Road', '868-565-3434', 'philosopers@stonepub.org'),
 ('Wolters Kluwer', '20101 Hamilton Ave', '310-324-3019', 'wolters.kluwer@gmail.com');
+
+
 

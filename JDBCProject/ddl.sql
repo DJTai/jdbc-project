@@ -64,5 +64,13 @@ VALUES ('Marvel Comics', '500 Marvelous Way', '917-555-1234', 'marvel@marvel.com
 ('Philosophers Stone', '1000 Rocky Road', '868-565-3434', 'philosopers@stonepub.org'),
 ('Wolters Kluwer', '20101 Hamilton Ave', '310-324-3019', 'wolters.kluwer@gmail.com');
 
+INSERT INTO books(groupName, bookTitle, publisherName, yearPublished, numberPages)
+VALUES ('Riders Block', 'Writing Derby', 'No Starch Press', 2018, 300),
+('Avengers Writers', 'Secret Avengers', 'Marvel Comics', 2011, 40),
+('Comment Blocks', 'TODO: && Other Unfinished Code', 'No Starch Press', 2018, 200),
+('Found My Fitness', 'Finding Your Fitness', '2Leaf Press', 2014, 300),
+('Only SQLs', 'Architecture: Not The Stone Kind', 'McGraw-Hill Education', 2014, 330),
+('Left on Read', 'Singularity: Rise of the Humans', 'Philosophers Stone', 2017, 276),
+('Comment Blocks', 'Writing Less Code With Kotlin', 'No Starch Press', 2018, 222);
 
 

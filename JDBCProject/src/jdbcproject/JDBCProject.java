@@ -255,7 +255,7 @@ public class JDBCProject {
                 resultSet.close();
                 statement.close();
             } catch (SQLException ex) {
-                Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex); 
             }
         }
     } 

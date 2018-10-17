@@ -66,15 +66,15 @@ public class JDBCProject {
         /* DB connection and statement being used */
         Connection connection = null;
         Statement statement = null;
-        
+
         // STEP 2: Register JDBC Driver
         Class.forName(JDBC_DRIVER);
         getDBCredentials();
-      
+
         // STEP 3: Open a connection
         System.out.println("Connecting to the database...");
         connection = DriverManager.getConnection(DB_URL);
-      
+
         System.out.println("DB accessed\n");
 
         accessDatabase(connection, statement);
@@ -121,6 +121,7 @@ public class JDBCProject {
                                     case 1:
                                         // TODO: Call Chelsea's method
                                         // ex: listAllWritingGroups()
+                                        listAll(1, mStatement, mConnection);
                                         break;
 
                                     case 2:
@@ -166,6 +167,7 @@ public class JDBCProject {
                                 switch (pubResponse) {
                                     case 1:
                                         // List all
+                                        listAll(2, mStatement, mConnection);
                                         break;
 
                                     case 2:
@@ -216,6 +218,7 @@ public class JDBCProject {
                                 switch (bkResponse) {
                                     case 1:
                                         // List all
+                                        listAll(3, mStatement,mConnection);
                                         break;
 
                                     case 2:
@@ -265,16 +268,15 @@ public class JDBCProject {
                         break;
                 }
                 // end switch(response)
-                
+
             } catch (InputMismatchException ime) {
                 System.out.println("Integers only, please.");
                 stdin.nextLine();
                 delayForEffect();
             }
-    }
+        }
     }
 
-    
     /**
      *
      * @param userChoice
@@ -316,9 +318,7 @@ public class JDBCProject {
             } catch (SQLException ex) {
                 Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        
-        // If user wants to list all publishers.
+        } // If user wants to list all publishers.
         else if (userChoice == 2) {
             try {
                 // Execute a query.
@@ -352,9 +352,7 @@ public class JDBCProject {
             } catch (SQLException ex) {
                 Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        
-        // If user wants to list all book titles.
+        } // If user wants to list all book titles.
         else if (userChoice == 3) {
             try {
                 // Execute a query.
@@ -381,14 +379,10 @@ public class JDBCProject {
                 resultSet.close();
                 statement.close();
             } catch (SQLException ex) {
-                Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex); 
+                Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    } 
-        }
-        // end while-loop
     }
-    // end method
 
     /**
      * Prints main menu prompt to the screen

@@ -92,45 +92,43 @@ public class JDBCProject {
 
             printMainMenu();
 
-            try {    // Only accept integers
-                
+            // try-catch for integer input only
+            try {
                 response = stdin.nextInt();
-                /* Show different submenus based off user reponse */
+
                 switch (response) {
+
                     case 1:
                         /* Writing Groups Submenu */
                         stdin.nextLine();  // Clear any extra user input
                         int wgResponse;    // Response for Writing group submenu
-                        boolean wgRepeat = true;
+                        boolean wgRepeat;
 
                         do {
-
                             try {
                                 printWritingGroupMenu();
                                 wgResponse = stdin.nextInt();
+                                wgRepeat = false;
 
                                 // Writing Group inner-menu
                                 switch (wgResponse) {
                                     case 1:
                                         // TODO: Call Chelsea's method
-                                        wgRepeat = false;
                                         break;
 
                                     case 2:
                                         // TODO: List by user input       
-                                        wgRepeat = false;
                                         break;
 
                                     case 3:
                                         // TODO: Return to main menu
                                         System.out.println("Returning to main menu\n");
-                                        wgRepeat = false;
                                         break;
 
                                     default:
-                                        // TODO: Return to main menu
                                         System.out.println("Selection invalid\n");
                                         stdin.nextLine();
+                                        wgRepeat = true;
                                         delayForEffect();
                                         break;
                                 }
@@ -138,8 +136,7 @@ public class JDBCProject {
                             } catch (InputMismatchException ime) {
                                 System.out.println("Integers only, please.");
                                 stdin.nextLine();
-
-                                // Add a pause so that the reader can read the message
+                                wgRepeat = true;
                                 delayForEffect();
                             }
 
@@ -154,38 +151,46 @@ public class JDBCProject {
                         boolean pubRepeat;
 
                         do {
-                            pubRepeat = false;
-                            printPublishersMenu();
-                            pubResponse = stdin.nextInt();
+                            try {
+                                pubRepeat = false;
+                                printPublishersMenu();
+                                pubResponse = stdin.nextInt();
 
-                            switch (pubResponse) {
-                                case 1:
-                                    // List all
-                                    break;
+                                switch (pubResponse) {
+                                    case 1:
+                                        // List all
+                                        break;
 
-                                case 2:
-                                    // By pub
-                                    break;
+                                    case 2:
+                                        // By pub
+                                        break;
 
-                                case 3:
-                                    // Insert new pub
-                                    break;
+                                    case 3:
+                                        // Insert new pub
+                                        break;
 
-                                case 4:
-                                    // Change pub
-                                    break;
+                                    case 4:
+                                        // Change pub
+                                        break;
 
-                                case 5:
-                                    // Return to main menu
-                                    System.out.println("Returning to main menu");
-                                    break;
+                                    case 5:
+                                        // Return to main menu
+                                        System.out.println("Returning to main menu");
+                                        break;
 
-                                default:
-                                    System.out.println("Invalid selection");
-                                    pubRepeat = true;
-                                    break;
+                                    default:
+                                        System.out.println("Invalid selection");
+                                        pubRepeat = true;
+                                        break;
+                                }
+                            } catch (InputMismatchException ime) {
+                                System.out.println("Integers only, please.");
+                                stdin.nextLine();
+                                pubRepeat = true;
+                                delayForEffect();
                             }
                         } while (pubRepeat);
+
                         break;
                     // end case 2
 
@@ -195,25 +200,68 @@ public class JDBCProject {
                         int bkResponse;
                         boolean bkRepeat;
 
+                        do {
+                            try {
+                                bkRepeat = false;
+                                printBooksMenu();
+                                bkResponse = stdin.nextInt();
+
+                                switch (bkResponse) {
+                                    case 1:
+                                        // List all
+                                        break;
+
+                                    case 2:
+                                        // List by book title
+                                        break;
+
+                                    case 3:
+                                        // Insert new book
+                                        break;
+
+                                    case 4:
+                                        // Remove a book
+                                        break;
+
+                                    case 5:
+                                        // Return to main menu
+                                        System.out.println("Returning to main menu");
+                                        break;
+
+                                    default:
+                                        System.out.println("Invalid selection");
+                                        delayForEffect();
+                                        pubRepeat = true;
+                                        break;
+                                }
+                            } catch (InputMismatchException ime) {
+                                System.out.println("Integers only, please.");
+                                stdin.nextLine();
+                                bkRepeat = true;
+                                delayForEffect();
+                            }
+                        } while (bkRepeat);
+
                         break;
 
                     case 4:
                         /* Exit Program */
                         stdin.nextLine();  // Clear any extra input
-                        System.out.println("Thank you for using our services. Farewell!");
+                        System.out.println("Thank you for using our services. Farewell!\n");
+                        delayForEffect();
                         break;
 
                     default:
-                        // TODO: Reprompt menu
                         stdin.nextLine();  // Clear any extra input
+                        System.out.println("Invalid selection");
+                        delayForEffect();
                         break;
                 }
                 // end switch(response)
+                
             } catch (InputMismatchException ime) {
                 System.out.println("Integers only, please.");
                 stdin.nextLine();
-
-                // Add a pause so that the reader can read the message
                 delayForEffect();
             }
         }
@@ -224,7 +272,7 @@ public class JDBCProject {
     /**
      * Prints main menu prompt to the screen
      */
-    public static void printMainMenu() {
+    private static void printMainMenu() {
 
         System.out.println("\n-- MAIN MENU --");
         System.out.println("1. Writing Groups");
@@ -237,7 +285,7 @@ public class JDBCProject {
     /**
      * Prints Writing Groups sub-menu prompt to the screen
      */
-    public static void printWritingGroupMenu() {
+    private static void printWritingGroupMenu() {
 
         System.out.println("\n-- WRITING GROUP MENU -- ");
         System.out.println("1. List all");
@@ -249,7 +297,7 @@ public class JDBCProject {
     /**
      * Prints Publishers sub-menu prompt to the screen
      */
-    public static void printPublishersMenu() {
+    private static void printPublishersMenu() {
 
         System.out.println("\n-- PUBLISHERS MENU -- ");
         System.out.println("1. List all");
@@ -263,7 +311,7 @@ public class JDBCProject {
     /**
      * Prints Book sub-menu prompt to the screen
      */
-    public static void printBooksMenu() {
+    private static void printBooksMenu() {
 
         System.out.println("\n-- BOOKS MENU -- ");
         System.out.println("1. List all");
@@ -274,7 +322,7 @@ public class JDBCProject {
         System.out.print("Choice: ");
     }
 
-    public static void delayForEffect() {
+    private static void delayForEffect() {
         try {
             Thread.sleep(1500);
         } catch (InterruptedException ex) {

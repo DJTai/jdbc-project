@@ -120,7 +120,7 @@ public class JDBCProject {
                                 switch (wgResponse) {
                                     case 1:
                                         // TODO: Call Chelsea's method
-                                        // ex: listAllWritingGroups()
+                                        listAll(1, mStatement, mConnection);
                                         break;
 
                                     case 2:
@@ -166,6 +166,7 @@ public class JDBCProject {
                                 switch (pubResponse) {
                                     case 1:
                                         // List all
+                                        listAll(2, mStatement, mConnection);
                                         break;
 
                                     case 2:
@@ -216,6 +217,7 @@ public class JDBCProject {
                                 switch (bkResponse) {
                                     case 1:
                                         // List all
+                                        listAll(3, mStatement, mConnection);
                                         break;
 
                                     case 2:
@@ -385,9 +387,6 @@ public class JDBCProject {
             }
         }
     } 
-        }
-        // end while-loop
-    }
     // end method
 
     /**

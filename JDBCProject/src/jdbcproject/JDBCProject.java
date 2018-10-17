@@ -71,7 +71,7 @@ public class JDBCProject {
 
         System.out.println("DB accessed\n");
 
-        menuPrompts(connection, statement);
+        accessDatabase(connection, statement);
 
         System.exit(0);
     }
@@ -82,7 +82,7 @@ public class JDBCProject {
      * @param mConnection - Connection to DB
      * @param mStatement - Statement to be executed
      */
-    public static void menuPrompts(Connection mConnection, Statement mStatement) {
+    public static void accessDatabase(Connection mConnection, Statement mStatement) {
 
         Scanner stdin = new Scanner(System.in);
         int response = -1;
@@ -114,6 +114,7 @@ public class JDBCProject {
                                 switch (wgResponse) {
                                     case 1:
                                         // TODO: Call Chelsea's method
+                                        // ex: listAllWritingGroups()
                                         break;
 
                                     case 2:

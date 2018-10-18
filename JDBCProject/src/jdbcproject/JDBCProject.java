@@ -174,6 +174,7 @@ public class JDBCProject {
 
                                     case 2:
                                         // By pub
+                                        listByPublisher(mConnection);
                                         break;
 
                                     case 3:
@@ -496,6 +497,60 @@ public class JDBCProject {
                     askAgain = false;
                 } else {
                     System.out.println("The group name " + userInput + " does not exist.\nEnter a different group name.");
+                }
+                // STEP 6: Clean-up environment
+                resultSet.close();
+                pstmt.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    /** List all the data for a publisher specified by the user.
+     * 
+     * @param connection - The connection session to the database.
+     */
+    private static void listByPublisher(Connection connection) {
+        try {
+            boolean askAgain = true;
+            while (askAgain) {
+                // Prompt the user to enter the group name of the writing group they want to view data for.
+                Scanner in = new Scanner(System.in);
+                System.out.print("Publisher name: ");
+                String userInput = in.nextLine();
+
+                // stmt has a bind variable (?).
+                // The user may have entered a group name with casing that is different than what we have in the database.
+                // Use the sql lower function to make the groupName attribute all lower-case, which will come in handy for comparison with the user's input.
+                String stmt = "SELECT publisherName, publisherAddress, publisherPhone, publisherEmail FROM publishers where lower(publisherName) = ?";
+                // Create PreparedStatement object.
+                PreparedStatement pstmt = connection.prepareStatement(stmt);
+
+                // Bind the variable.
+                // Convert userInput to lower-case so that comparison with the attribute in the database is somewhat "case-insensitive".
+                pstmt.setString(1, userInput.toLowerCase());
+                ResultSet resultSet = pstmt.executeQuery();
+
+                System.out.println();
+                
+                if (resultSet.next()) {
+                    System.out.printf(DISPLAY_PUBLISHERS, "Publisher Name", "Publisher Address", "Publisher Phone",
+                        "Publisher Email");
+
+                    // Retrieve by column name
+                    String publisherName = resultSet.getString("publisherName");
+                    String publisherAddress = resultSet.getString("publisherAddress");
+                    String publisherPhone = resultSet.getString("publisherPhone");
+                    String publisherEmail= resultSet.getString("publisherEmail");
+
+                    // Display values
+                    System.out.printf(DISPLAY_PUBLISHERS,
+                            displayNull(publisherName), displayNull(publisherAddress), displayNull(publisherPhone),
+                            displayNull(publisherEmail));
+                    askAgain = false;
+                } else {
+                    System.out.println("The publisher name " + userInput + " does not exist.\nEnter a different publisher name.");
                 }
                 // STEP 6: Clean-up environment
                 resultSet.close();

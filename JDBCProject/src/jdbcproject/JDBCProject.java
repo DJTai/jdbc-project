@@ -28,7 +28,9 @@ public class JDBCProject {
 
     /* printf formatting */
     static final String DISPLAY_FORMAT = "%-5s%-15s%-15s%-15s\n";
-    static final String DISPLAY_WRITING_GROUPS = "%-30s%-30s%-6s%-20s\n";
+    static final String DISPLAY_WRITING_GROUPS = "%-30s%-30s%-15s%-20s\n";
+    static final String DISPLAY_PUBLISHERS = "%-30s%-30s%-20s%-40s\n";
+    static final String DISPLAY_BOOKTITLES = "%-30s\n";
 
     /**
      * Takes the input String and outputs "N/A" if the String is empty or null.
@@ -124,7 +126,8 @@ public class JDBCProject {
                                         break;
 
                                     case 2:
-                                        // TODO: List by user input       
+                                            // TODO: List by user input
+                                        listByGroup(mConnection);
                                         break;
 
                                     case 3:
@@ -277,13 +280,13 @@ public class JDBCProject {
     }
 
     
-    /**
+    /** Lists all writing groups, publishers, or book titles.
      *
-     * @param userChoice
-     * @param statement
-     * @param connection
+     * @param userChoice - User's selection from the menu.
+     * @param statement - SQL statement to be executed.
+     * @param connection - The connection session with the database.
      */
-    public static void listAll(int userChoice, Statement statement, Connection connection) {
+    private static void listAll(int userChoice, Statement statement, Connection connection) {
         // If user wants to list all writing groups.
         if (userChoice == 1) {
             try {
@@ -292,12 +295,12 @@ public class JDBCProject {
                 statement = connection.createStatement();
                 String sql;
                 ResultSet resultSet;
-                // sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
+                
                 sql = "SELECT groupName, headWriter, yearFormed, Subject FROM writingGroups";
                 resultSet = statement.executeQuery(sql);
 
                 // STEP 5: Extract data from the result set
-                System.out.printf("%-30s%-30s%-12s%-20s\n", "Group Name", "Head Writer", "Year Formed",
+                System.out.printf(DISPLAY_WRITING_GROUPS, "Group Name", "Head Writer", "Year Formed",
                         "Subject");
                 while (resultSet.next()) {
                     // Retrieve by column name
@@ -307,7 +310,7 @@ public class JDBCProject {
                     String subject = resultSet.getString("subject");
 
                     // Display values
-                    System.out.printf("%-30s%-30s%-12s%-20s\n",
+                    System.out.printf(DISPLAY_WRITING_GROUPS,
                             displayNull(groupName), displayNull(headWriter), displayNull(yearFormed),
                             displayNull(subject));
                 }
@@ -333,7 +336,7 @@ public class JDBCProject {
                 resultSet = statement.executeQuery(sql);
 
                 // STEP 5: Extract data from the result set
-                System.out.printf("%-30s%-30s%-20s%-40s\n", "Publisher Name", "Publisher Address", "Publisher Phone",
+                System.out.printf(DISPLAY_PUBLISHERS, "Publisher Name", "Publisher Address", "Publisher Phone",
                         "Publisher Email");
                 while (resultSet.next()) {
                     // Retrieve by column name
@@ -343,7 +346,7 @@ public class JDBCProject {
                     String publisherEmail = resultSet.getString("publisherEmail");
 
                     // Display values
-                    System.out.printf("%-30s%-30s%-20s%-40s\n",
+                    System.out.printf(DISPLAY_PUBLISHERS,
                             displayNull(publisherName), displayNull(publisherAddress), displayNull(publisherPhone),
                             displayNull(publisherEmail));
                 }
@@ -369,13 +372,13 @@ public class JDBCProject {
                 resultSet = statement.executeQuery(sql);
 
                 // STEP 5: Extract data from the result set
-                System.out.printf("%-30s\n", "Book Title");
+                System.out.printf(DISPLAY_BOOKTITLES, "Book Title");
                 while (resultSet.next()) {
                     // Retrieve by column name
                     String bookTitle = resultSet.getString("bookTitle");
 
                     // Display values
-                    System.out.printf("%-30s\n",
+                    System.out.printf(DISPLAY_BOOKTITLES,
                             displayNull(bookTitle));
                 }
 
@@ -450,4 +453,57 @@ public class JDBCProject {
         }
     }
 
+    /** Lists all the data for a group specified by the user.
+     * 
+     * @param connection - The connection session with the database.
+     */
+    private static void listByGroup(Connection connection) {
+        try {
+            boolean askAgain = true;
+            while (askAgain) {
+                // Prompt the user to enter the group name of the writing group they want to view data for.
+                Scanner in = new Scanner(System.in);
+                System.out.print("Group name: ");
+                String userInput = in.nextLine();
+
+                // stmt has a bind variable (?).
+                // The user may have entered a group name with casing that is different than what we have in the database.
+                // Use the sql lower function to make the groupName attribute all lower-case, which will come in handy for comparison with the user's input.
+                String stmt = "SELECT groupName, headWriter, yearFormed, Subject FROM writingGroups where lower(groupName) = ?";
+                // Create PreparedStatement object.
+                PreparedStatement pstmt = connection.prepareStatement(stmt);
+
+                // Bind the variable.
+                // Convert userInput to lower-case so that comparison with the attribute in the database is somewhat "case-insensitive".
+                pstmt.setString(1, userInput.toLowerCase());
+                ResultSet resultSet = pstmt.executeQuery();
+
+                System.out.println();
+                if (resultSet.next()) {
+                    System.out.printf(DISPLAY_WRITING_GROUPS, "Group Name", "Head Writer", "Year Formed",
+                        "Subject");
+
+                    // Retrieve by column name
+                    String groupName = resultSet.getString("groupName");
+                    String headWriter = resultSet.getString("headWriter");
+                    String yearFormed = resultSet.getString("yearFormed");
+                    String subject = resultSet.getString("subject");
+
+                    // Display values
+                    System.out.printf(DISPLAY_WRITING_GROUPS,
+                            displayNull(groupName), displayNull(headWriter), displayNull(yearFormed),
+                            displayNull(subject));
+                    askAgain = false;
+                } else {
+                    System.out.println("The group name " + userInput + " does not exist.\nEnter a different group name.");
+                }
+                // STEP 6: Clean-up environment
+                resultSet.close();
+                pstmt.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 }

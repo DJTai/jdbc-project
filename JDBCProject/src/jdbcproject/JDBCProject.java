@@ -204,9 +204,7 @@ public class JDBCProject {
                     // end case 2
 
                     case 3:
-                        /* ------------- */
- /* Books Submenu */
- /* ------------- */
+                        /* Books Submenu */
                         stdin.nextLine();  // Clear any extra input
                         int bkResponse;
                         boolean bkRepeat;
@@ -236,6 +234,7 @@ public class JDBCProject {
                                             String bookTitle, sql;
 
                                             // Execute a query.
+                                            System.out.println("\nSEARCHING FOR A BOOK");
                                             System.out.print("What is the book title?: ");
                                             bookTitle = stdin.nextLine();
 
@@ -294,6 +293,39 @@ public class JDBCProject {
 
                                     case 4:
                                         // Remove a book
+                                        bkRepeat = true;
+                                        stdin.nextLine();
+
+                                        // TODO: Modularize
+                                        try {
+                                            PreparedStatement pStmt;
+                                            String bookTitle, sql;
+
+                                            // Execute a query.
+                                            System.out.println("\nREMOVING A BOOK");
+                                            System.out.print("What is the book title?: ");
+                                            bookTitle = stdin.nextLine();
+
+                                            // Prepare statement
+                                            mStatement = mConnection.createStatement();
+                                            sql = "DELETE FROM books WHERE bookTitle=?";
+                                            pStmt = mConnection.prepareStatement(sql);
+                                            pStmt.setString(1, bookTitle);
+
+                                            if (pStmt.executeUpdate() == 1) {
+                                                System.out.println("Book successfully removed");
+                                                delayForEffect();
+                                            } else {
+                                                System.out.println("Hmm...that book is not listed");
+                                                delayForEffect();
+                                            }
+                                            
+                                            mStatement.close();
+
+                                        } catch (SQLException ex) {
+                                            Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                        
                                         break;
 
                                     case 5:
@@ -304,7 +336,7 @@ public class JDBCProject {
                                     default:
                                         System.out.println("Invalid selection");
                                         delayForEffect();
-                                        pubRepeat = true;
+                                        bkRepeat = true;
                                         break;
                                 }
                             } catch (InputMismatchException ime) {
@@ -494,7 +526,7 @@ public class JDBCProject {
         System.out.println("1. List all");
         System.out.println("2. Search by book title");
         System.out.println("3. Insert a new book");
-        System.out.println("4. Remove a current book");
+        System.out.println("4. Remove an existing book");
         System.out.println("5. Main Menu");
         System.out.print("Choice: ");
     }

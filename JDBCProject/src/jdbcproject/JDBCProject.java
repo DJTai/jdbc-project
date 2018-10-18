@@ -204,7 +204,9 @@ public class JDBCProject {
                     // end case 2
 
                     case 3:
-                        /* Books Submenu */
+                        /* ------------- */
+ /* Books Submenu */
+ /* ------------- */
                         stdin.nextLine();  // Clear any extra input
                         int bkResponse;
                         boolean bkRepeat;
@@ -218,11 +220,72 @@ public class JDBCProject {
                                 switch (bkResponse) {
                                     case 1:
                                         // List all
-                                        listAll(3, mStatement,mConnection);
+                                        bkRepeat = true;
+                                        listAll(3, mStatement, mConnection);
                                         break;
 
                                     case 2:
-                                        // List by book title
+                                        // List all info for a designated book
+                                        bkRepeat = true;
+                                        stdin.nextLine();
+
+                                        // TODO: Modularize
+                                        try {
+                                            ResultSet resultSet;
+                                            PreparedStatement pStmt;
+                                            String bookTitle, sql;
+
+                                            // Execute a query.
+                                            System.out.print("What is the book title?: ");
+                                            bookTitle = stdin.nextLine();
+
+                                            // Prepare statement
+                                            mStatement = mConnection.createStatement();
+                                            sql = "SELECT * FROM books WHERE bookTitle=?";
+                                            pStmt = mConnection.prepareStatement(sql);
+                                            pStmt.setString(1, bookTitle);
+
+                                            resultSet = pStmt.executeQuery();
+
+                                            // Execute only if data exists
+                                            if (resultSet.next()) {
+                                                do {
+                                                    System.out.printf("\n%-30s%-30s%-24s%-8s%-14s\n",
+                                                            "BOOK TITLE",
+                                                            "WRITING GROUP",
+                                                            "PUBLISHER",
+                                                            "YEAR",
+                                                            "NUM. OF PAGES");
+
+                                                    // Retrieve by column name
+                                                    String bkTitle = resultSet.getString("bookTitle");
+                                                    String bkGroupName = resultSet.getString("groupName");
+                                                    String bkPubName = resultSet.getString("publisherName");
+                                                    int bkYearPublished = resultSet.getInt("yearPublished");
+                                                    int bkNumOfPages = resultSet.getInt("numberPages");
+
+                                                    // Display values
+                                                    System.out.printf("%-30s%-30s%-24s%-8d%-14d\n",
+                                                            displayNull(bkTitle),
+                                                            displayNull(bkGroupName),
+                                                            displayNull(bkPubName),
+                                                            bkYearPublished,
+                                                            bkNumOfPages);
+
+                                                } while (resultSet.next());
+
+                                            } else {
+                                                System.out.println("Hmm...that book is not listed");
+                                                delayForEffect();
+                                            }
+
+                                            resultSet.close();
+                                            mStatement.close();
+
+                                        } catch (SQLException ex) {
+                                            Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+
                                         break;
 
                                     case 3:
@@ -356,7 +419,6 @@ public class JDBCProject {
         else if (userChoice == 3) {
             try {
                 // Execute a query.
-                System.out.println("Creating a statement...");
                 statement = connection.createStatement();
                 String sql;
                 ResultSet resultSet;
@@ -365,7 +427,7 @@ public class JDBCProject {
                 resultSet = statement.executeQuery(sql);
 
                 // STEP 5: Extract data from the result set
-                System.out.printf("%-30s\n", "Book Title");
+                System.out.printf("\n%-30s\n", "BOOK TITLE");
                 while (resultSet.next()) {
                     // Retrieve by column name
                     String bookTitle = resultSet.getString("bookTitle");
@@ -430,7 +492,7 @@ public class JDBCProject {
 
         System.out.println("\n-- BOOKS MENU -- ");
         System.out.println("1. List all");
-        System.out.println("2. List by book title");
+        System.out.println("2. Search by book title");
         System.out.println("3. Insert a new book");
         System.out.println("4. Remove a current book");
         System.out.println("5. Main Menu");

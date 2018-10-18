@@ -31,6 +31,7 @@ public class JDBCProject {
     static final String DISPLAY_WRITING_GROUPS = "%-30s%-30s%-15s%-20s\n";
     static final String DISPLAY_PUBLISHERS = "%-30s%-30s%-20s%-40s\n";
     static final String DISPLAY_BOOKTITLES = "%-30s\n";
+    static final String DISPLAY_BOOKS = "%-30s%-50s%-40s%-10s%-10s\n";
 
     /**
      * Takes the input String and outputs "N/A" if the String is empty or null.
@@ -230,6 +231,7 @@ public class JDBCProject {
 
                                     case 3:
                                         // Insert new book
+                                        insertNewBook(mConnection);
                                         break;
 
                                     case 4:
@@ -292,14 +294,13 @@ public class JDBCProject {
         if (userChoice == 1) {
             try {
                 // Execute a query.
-                System.out.println("Creating a statement...");
                 statement = connection.createStatement();
                 String sql;
                 ResultSet resultSet;
                 
-                sql = "SELECT groupName, headWriter, yearFormed, Subject FROM writingGroups";
+                sql = "SELECT groupName, headWriter, yearFormed, Subject FROM writingGroups order by groupName";
                 resultSet = statement.executeQuery(sql);
-
+                System.out.println();
                 // STEP 5: Extract data from the result set
                 System.out.printf(DISPLAY_WRITING_GROUPS, "Group Name", "Head Writer", "Year Formed",
                         "Subject");
@@ -328,14 +329,13 @@ public class JDBCProject {
         else if (userChoice == 2) {
             try {
                 // Execute a query.
-                System.out.println("Creating a statement...");
                 statement = connection.createStatement();
                 String sql;
                 ResultSet resultSet;
                 // sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
-                sql = "SELECT publisherName, publisherAddress, publisherPhone, publisherEmail FROM publishers";
+                sql = "SELECT publisherName, publisherAddress, publisherPhone, publisherEmail FROM publishers order by publisherName";
                 resultSet = statement.executeQuery(sql);
-
+                System.out.println();
                 // STEP 5: Extract data from the result set
                 System.out.printf(DISPLAY_PUBLISHERS, "Publisher Name", "Publisher Address", "Publisher Phone",
                         "Publisher Email");
@@ -364,14 +364,13 @@ public class JDBCProject {
         else if (userChoice == 3) {
             try {
                 // Execute a query.
-                System.out.println("Creating a statement...");
                 statement = connection.createStatement();
                 String sql;
                 ResultSet resultSet;
                 // sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
-                sql = "SELECT bookTitle FROM books";
+                sql = "SELECT bookTitle FROM books order by bookTitle";
                 resultSet = statement.executeQuery(sql);
-
+                System.out.println();
                 // STEP 5: Extract data from the result set
                 System.out.printf(DISPLAY_BOOKTITLES, "Book Title");
                 while (resultSet.next()) {
@@ -561,4 +560,102 @@ public class JDBCProject {
         }
     }
     
+    /** Insert a new book into the database.
+     * 
+     * @param connection - The connection session to the database.
+     */
+    // TODO: handle non-existent group name, publisher name errors.
+    // TODO: handle primary key violation.
+    private static void insertNewBook(Connection connection) {
+ 
+        boolean askAgain = true;
+        while (askAgain) {
+            try {
+                // stmt has bind variables (?).
+                String stmt = "INSERT INTO books(groupName, bookTitle, publisherName, yearPublished, numberPages) "
+                        + "VALUES (?, ?, ?, ?, ?)";
+                // Create PreparedStatement object.
+                PreparedStatement pstmt = connection.prepareStatement(stmt);
+                
+                // Prompt the user to enter the group name.
+                Scanner in = new Scanner(System.in);
+                System.out.print("Group name: ");
+                String userGroupName = in.nextLine();
+                // Bind the variable.
+                pstmt.setString(1, userGroupName);
+
+                System.out.print("Book title: ");
+                String userBookTitle = in.nextLine();
+                pstmt.setString(2, userBookTitle); 
+
+                System.out.print("Publisher name: ");
+                String userPublisherName = in.nextLine();
+                pstmt.setString(3, userPublisherName);
+
+                System.out.print("Year published: ");
+                int userYearPublished = in.nextInt();
+                pstmt.setInt(4, userYearPublished);
+
+
+                System.out.print("Number of pages: ");
+                int userNumOfPages = in.nextInt();
+                pstmt.setInt(5, userNumOfPages);
+                
+                
+                int rowCount = pstmt.executeUpdate();
+                
+                System.out.println();
+                
+                if (rowCount >= 1) {
+                    askAgain = false;
+                    System.out.println("Book successfully inserted.");
+                    
+                    String stmt2 = "SELECT groupName, bookTitle, publisherName, yearPublished, numberPages from books where groupName = ? AND bookTitle = ?";
+                    PreparedStatement pstmt2 = connection.prepareStatement(stmt2);
+                    
+                    // Bind the variable.
+                    pstmt2.setString(1, userGroupName);
+                    pstmt2.setString(2, userBookTitle);
+                    ResultSet resultSet = pstmt2.executeQuery();
+                    
+                    if (resultSet.next()) {
+                        System.out.printf(DISPLAY_BOOKS, "Group Name", "Book Title", "Publisher Name",
+                                "Year Published", "Number Of Pages");
+                        
+                        // Retrieve by column name
+                        String groupName = resultSet.getString("groupName");
+                        String bookTitle = resultSet.getString("bookTitle");
+                        String publisherName = resultSet.getString("publisherName");
+                        String yearPublished= resultSet.getString("yearPublished");
+                        String numberPages= resultSet.getString("numberPages");
+                        
+                        
+                        
+                        // Display values
+                        System.out.printf(DISPLAY_BOOKS,
+                                displayNull(groupName), displayNull(bookTitle), displayNull(publisherName),
+                                displayNull(yearPublished), displayNull(numberPages));
+                    } else {
+                        System.out.println("The insertion was unsuccessful.");
+                    }
+                    // STEP 6: Clean-up environment
+                    resultSet.close();
+                    pstmt.close();
+                }
+            } catch (SQLException ex) {
+                if (ex.getMessage().contains("caused a violation of foreign key constraint 'BOOKS_FK01'")) {
+                    System.out.println("The group name you entered does not exist. Try a different group name. Keep in mind that group names are case sensitive.");
+                } else if (ex.getMessage().contains("caused a violation of foreign key constraint 'BOOKS_FK02'")) {
+                    System.out.println("The publisher name you entered does not exist. Try a different publisher name. Keep in mind that publisher names are case sensitive.");
+                } else if (ex.getMessage().contains("The statement was aborted because it would have caused a duplicate key value in a unique or primary key constraint or unique index identified by 'BOOKS_PK' defined on 'BOOKS'.")) {
+                    System.out.println("There is already a row in the table with those primary key column (group name, book title) values.");
+                } else if (ex.getMessage().contains("The statement was aborted because it would have caused a duplicate key value in a unique or primary key constraint or unique index identified by 'BOOKS_CK' defined on 'BOOKS'.")) {
+                    System.out.println("There is already a row in the table with those candidate key column (book title, publisher name) values.");
+                } 
+                else {
+                    System.out.println(ex.getMessage());
+                }
+            }
+        }
+    }
 }

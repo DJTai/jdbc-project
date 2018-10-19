@@ -14,7 +14,7 @@ JDBC Project for CECS 323. For a more detailed requirements listing, click [here
     - [ ] List all the data for a book specified by the user
     - [x] Insert a new book
     - [ ] Insert a new publisher and update all *books* published by one publisher to be published by the new publisher. Leave the old publisher name, just modify the books that they have published. Assume that the new publisher has bought out the old one, so now any books published by the old publisher are published by the new one
-    - [ ] Remove a book specified by the user
+    - [x] Remove a book specified by the user
 
 *NOTE*:
 - For all queries involving use rinput, you MUST use prepared statements

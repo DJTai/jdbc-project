@@ -131,7 +131,6 @@ public class JDBCProject {
                                         break;
 
                                     case 3:
-                                        // TODO: Return to main menu
                                         System.out.println("Returning to main menu\n");
                                         break;
 
@@ -168,7 +167,6 @@ public class JDBCProject {
 
                                 switch (pubResponse) {
                                     case 1:
-                                        // List all
                                         listAll(2, mStatement, mConnection);
                                         break;
 
@@ -178,14 +176,14 @@ public class JDBCProject {
                                         break;
 
                                     case 3:
-                                        // Insert new pub
+                                        // TODO: Insert new pub// Change pub
+                                        // TODO: Prompt who to replace, oldPub
+                                        // TODO: Prompt for new name, newPub
+                                        // TODO: Change all existing oldPub references to newPub
+                                        // TODO: DON'T REMOVE oldPub FROM THE DB
                                         break;
 
                                     case 4:
-                                        // Change pub
-                                        break;
-
-                                    case 5:
                                         // Return to main menu
                                         System.out.println("Returning to main menu");
                                         break;
@@ -220,11 +218,74 @@ public class JDBCProject {
 
                                 switch (bkResponse) {
                                     case 1:
+                                        // List all
+                                        bkRepeat = true;
                                         listAll(3, mStatement, mConnection);
                                         break;
 
                                     case 2:
-                                        // List by book title
+                                        // List all info for a designated book
+                                        bkRepeat = true;
+                                        stdin.nextLine();
+
+                                        // TODO: Modularize
+                                        try {
+                                            ResultSet resultSet;
+                                            PreparedStatement pStmt;
+                                            String bookTitle, sql;
+
+                                            // Execute a query.
+                                            System.out.println("\nSEARCHING FOR A BOOK");
+                                            System.out.print("What is the book title?: ");
+                                            bookTitle = stdin.nextLine();
+
+                                            // Prepare statement
+                                            mStatement = mConnection.createStatement();
+                                            sql = "SELECT * FROM books WHERE bookTitle=?";
+                                            pStmt = mConnection.prepareStatement(sql);
+                                            pStmt.setString(1, bookTitle);
+
+                                            resultSet = pStmt.executeQuery();
+
+                                            // Execute only if data exists
+                                            if (resultSet.next()) {
+                                                do {
+                                                    System.out.printf("\n%-30s%-30s%-24s%-8s%-14s\n",
+                                                            "BOOK TITLE",
+                                                            "WRITING GROUP",
+                                                            "PUBLISHER",
+                                                            "YEAR",
+                                                            "NUM. OF PAGES");
+
+                                                    // Retrieve by column name
+                                                    String bkTitle = resultSet.getString("bookTitle");
+                                                    String bkGroupName = resultSet.getString("groupName");
+                                                    String bkPubName = resultSet.getString("publisherName");
+                                                    int bkYearPublished = resultSet.getInt("yearPublished");
+                                                    int bkNumOfPages = resultSet.getInt("numberPages");
+
+                                                    // Display values
+                                                    System.out.printf("%-30s%-30s%-24s%-8d%-14d\n",
+                                                            displayNull(bkTitle),
+                                                            displayNull(bkGroupName),
+                                                            displayNull(bkPubName),
+                                                            bkYearPublished,
+                                                            bkNumOfPages);
+
+                                                } while (resultSet.next());
+
+                                            } else {
+                                                System.out.println("Hmm...that book is not listed");
+                                                delayForEffect();
+                                            }
+
+                                            resultSet.close();
+                                            mStatement.close();
+
+                                        } catch (SQLException ex) {
+                                            Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+
                                         break;
 
                                     case 3:
@@ -234,6 +295,39 @@ public class JDBCProject {
 
                                     case 4:
                                         // Remove a book
+                                        bkRepeat = true;
+                                        stdin.nextLine();
+
+                                        // TODO: Modularize
+                                        try {
+                                            PreparedStatement pStmt;
+                                            String bookTitle, sql;
+
+                                            // Execute a query.
+                                            System.out.println("\nREMOVING A BOOK");
+                                            System.out.print("What is the book title?: ");
+                                            bookTitle = stdin.nextLine();
+
+                                            // Prepare statement
+                                            mStatement = mConnection.createStatement();
+                                            sql = "DELETE FROM books WHERE bookTitle=?";
+                                            pStmt = mConnection.prepareStatement(sql);
+                                            pStmt.setString(1, bookTitle);
+
+                                            if (pStmt.executeUpdate() == 1) {
+                                                System.out.println("Book successfully removed");
+                                                delayForEffect();
+                                            } else {
+                                                System.out.println("Hmm...that book is not listed");
+                                                delayForEffect();
+                                            }
+
+                                            mStatement.close();
+
+                                        } catch (SQLException ex) {
+                                            Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+
                                         break;
 
                                     case 5:
@@ -244,7 +338,7 @@ public class JDBCProject {
                                     default:
                                         System.out.println("Invalid selection");
                                         delayForEffect();
-                                        pubRepeat = true;
+                                        bkRepeat = true;
                                         break;
                                 }
                             } catch (InputMismatchException ime) {
@@ -419,8 +513,7 @@ public class JDBCProject {
         System.out.println("1. List all");
         System.out.println("2. List by publisher name");
         System.out.println("3. Insert a new publisher");
-        System.out.println("4. Change a publisher");
-        System.out.println("5. Main Menu");
+        System.out.println("4. Main Menu");
         System.out.print("Choice: ");
     }
 
@@ -431,9 +524,9 @@ public class JDBCProject {
 
         System.out.println("\n-- BOOKS MENU -- ");
         System.out.println("1. List all");
-        System.out.println("2. List by book title");
+        System.out.println("2. Search by book title");
         System.out.println("3. Insert a new book");
-        System.out.println("4. Remove a current book");
+        System.out.println("4. Remove an existing book");
         System.out.println("5. Main Menu");
         System.out.print("Choice: ");
     }

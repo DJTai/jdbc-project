@@ -7,9 +7,9 @@ JDBC Project for CECS 323. For a more detailed requirements listing, click [here
 - [x] Create a `.sql` file for the DDL and run the script to create the DB, tabes, etc.
 - [ ] Write a JDBC program to support the following functions:
     - [x] List all writing groups
-    - [ ] List all the date for a group specified by the user
+    - [x] List all the data for a group specified by the user
     - [x] List all publishers
-    - [ ] List all the data for a publisher specified by the user
+    - [x] List all the data for a publisher specified by the user
     - [x] List all book titles
     - [ ] List all the data for a book specified by the user
     - [x] Insert a new book

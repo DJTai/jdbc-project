@@ -292,15 +292,14 @@ public class JDBCProject {
             try {
                 // Execute a query.
                 statement = connection.createStatement();
-                String sql;
-                ResultSet resultSet;
-                
-                sql = "SELECT groupName, headWriter, yearFormed, Subject FROM writingGroups order by groupName";
-                resultSet = statement.executeQuery(sql);
+                String sql = "SELECT groupName, headWriter, yearFormed, Subject FROM writingGroups order by groupName";
+                ResultSet resultSet = statement.executeQuery(sql);
                 System.out.println();
+                
                 // STEP 5: Extract data from the result set
                 System.out.printf(DISPLAY_WRITING_GROUPS, "Group Name", "Head Writer", "Year Formed",
                         "Subject");
+                
                 while (resultSet.next()) {
                     // Retrieve by column name
                     String groupName = resultSet.getString("groupName");
@@ -325,15 +324,14 @@ public class JDBCProject {
             try {
                 // Execute a query.
                 statement = connection.createStatement();
-                String sql;
-                ResultSet resultSet;
-                // sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
-                sql = "SELECT publisherName, publisherAddress, publisherPhone, publisherEmail FROM publishers order by publisherName";
-                resultSet = statement.executeQuery(sql);
+                String sql = "SELECT publisherName, publisherAddress, publisherPhone, publisherEmail FROM publishers order by publisherName";
+                ResultSet resultSet = statement.executeQuery(sql);
                 System.out.println();
+                
                 // STEP 5: Extract data from the result set
                 System.out.printf(DISPLAY_PUBLISHERS, "Publisher Name", "Publisher Address", "Publisher Phone",
                         "Publisher Email");
+                
                 while (resultSet.next()) {
                     // Retrieve by column name
                     String publisherName = resultSet.getString("publisherName");
@@ -358,14 +356,13 @@ public class JDBCProject {
             try {
                 // Execute a query.
                 statement = connection.createStatement();
-                String sql;
-                ResultSet resultSet;
-                // sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
-                sql = "SELECT bookTitle FROM books order by bookTitle";
-                resultSet = statement.executeQuery(sql);
+                String sql = "SELECT bookTitle FROM books order by bookTitle";
+                ResultSet resultSet = statement.executeQuery(sql);
                 System.out.println();
+                
                 // STEP 5: Extract data from the result set
                 System.out.printf(DISPLAY_BOOKTITLES, "Book Title");
+                
                 while (resultSet.next()) {
                     // Retrieve by column name
                     String bookTitle = resultSet.getString("bookTitle");
@@ -464,10 +461,10 @@ public class JDBCProject {
                     break;
                 }
 
-                // stmt has a bind variable (?).
                 // The user may have entered a group name with casing that is different than what we have in the database.
                 // Use the sql lower function to make the groupName attribute all lower-case, which will come in handy for comparison with the user's input.
                 String stmt = "SELECT groupName, headWriter, yearFormed, Subject FROM writingGroups where lower(groupName) = ?";
+                
                 // Create PreparedStatement object.
                 PreparedStatement pstmt = connection.prepareStatement(stmt);
 
@@ -477,6 +474,7 @@ public class JDBCProject {
                 ResultSet resultSet = pstmt.executeQuery();
 
                 System.out.println();
+                
                 if (resultSet.next()) {
                     System.out.printf(DISPLAY_WRITING_GROUPS, "Group Name", "Head Writer", "Year Formed",
                         "Subject");
@@ -491,6 +489,7 @@ public class JDBCProject {
                     System.out.printf(DISPLAY_WRITING_GROUPS,
                             displayNull(groupName), displayNull(headWriter), displayNull(yearFormed),
                             displayNull(subject));
+                    
                     askAgain = false;
                 } else {
                     // Give user the option to enter a different group name, or quit listByGroup altogether.
@@ -513,7 +512,7 @@ public class JDBCProject {
         try {
             boolean askAgain = true;
             while (askAgain) {
-                // Prompt the user to enter the publisher name of the publisher hey want to view data for.
+                // Prompt the user to enter the publisher name of the publisher they want to view data for.
                 Scanner in = new Scanner(System.in);
                 System.out.print("\nEnter a publisher name or 'q' to go back to the main menu: ");
                 String userInput = in.nextLine();
@@ -523,9 +522,8 @@ public class JDBCProject {
                     break;
                 }
                 
-                // stmt has a bind variable (?).
                 // The user may have entered a publisher name with casing that is different than what we have in the database.
-                // Use the sql lower function to make the groupName attribute all lower-case, which will come in handy for comparison with the user's input.
+                // Use the sql lower function to make the publisherName attribute all lower-case, which will come in handy for comparison with the user's input.
                 String stmt = "SELECT publisherName, publisherAddress, publisherPhone, publisherEmail FROM publishers where lower(publisherName) = ?";
                 
                 // Create PreparedStatement object.
@@ -552,6 +550,7 @@ public class JDBCProject {
                     System.out.printf(DISPLAY_PUBLISHERS,
                             displayNull(publisherName), displayNull(publisherAddress), displayNull(publisherPhone),
                             displayNull(publisherEmail));
+                    
                     askAgain = false;
                 } else {
                     // Give user the option to enter a different publisher name, or quit listByPublisher altogether.
@@ -575,9 +574,10 @@ public class JDBCProject {
         while (askAgain) {
             try {
                 System.out.println("\nEnter '-1' at any time to go back to the main menu.");
-                // stmt has bind variables (?).
+                
                 String stmt = "INSERT INTO books(groupName, bookTitle, publisherName, yearPublished, numberPages) "
                         + "VALUES (?, ?, ?, ?, ?)";
+                
                 // Create PreparedStatement object.
                 PreparedStatement pstmt = connection.prepareStatement(stmt);
                 

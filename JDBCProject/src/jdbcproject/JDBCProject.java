@@ -31,7 +31,7 @@ public class JDBCProject {
     static final String DISPLAY_WRITING_GROUPS = "%-30s%-30s%-15s%-20s\n";
     static final String DISPLAY_PUBLISHERS = "%-30s%-30s%-20s%-40s\n";
     static final String DISPLAY_BOOKTITLES = "%-30s\n";
-    static final String DISPLAY_BOOKS = "%-30s%-50s%-40s%-10s%-10s\n";
+    static final String DISPLAY_BOOKS = "%-30s%-30s%-30s%-20s%-20s\n";
 
     /**
      * Takes the input String and outputs "N/A" if the String is empty or null.
@@ -456,8 +456,13 @@ public class JDBCProject {
             while (askAgain) {
                 // Prompt the user to enter the group name of the writing group they want to view data for.
                 Scanner in = new Scanner(System.in);
-                System.out.print("Group name: ");
+                System.out.print("\nEnter a group name or 'q' to go back to the main menu: ");
                 String userInput = in.nextLine();
+                
+                // User may go back to the main menu if they enter q.
+                if(userInput.equals("q")) {
+                    break;
+                }
 
                 // stmt has a bind variable (?).
                 // The user may have entered a group name with casing that is different than what we have in the database.
@@ -488,14 +493,15 @@ public class JDBCProject {
                             displayNull(subject));
                     askAgain = false;
                 } else {
-                    System.out.println("The group name " + userInput + " does not exist.\nEnter a different group name.");
+                    // Give user the option to enter a different group name, or quit listByGroup altogether.
+                    System.out.println("The group name '" + userInput + "' does not exist.");
                 }
                 // STEP 6: Clean-up environment
                 resultSet.close();
                 pstmt.close();
             }
         } catch (SQLException ex) {
-            Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
         }
     }
     
@@ -507,15 +513,21 @@ public class JDBCProject {
         try {
             boolean askAgain = true;
             while (askAgain) {
-                // Prompt the user to enter the group name of the writing group they want to view data for.
+                // Prompt the user to enter the publisher name of the publisher hey want to view data for.
                 Scanner in = new Scanner(System.in);
-                System.out.print("Publisher name: ");
+                System.out.print("\nEnter a publisher name or 'q' to go back to the main menu: ");
                 String userInput = in.nextLine();
 
+                // User may go back to the main menu if they enter q.
+                if(userInput.equals("q")) {
+                    break;
+                }
+                
                 // stmt has a bind variable (?).
-                // The user may have entered a group name with casing that is different than what we have in the database.
+                // The user may have entered a publisher name with casing that is different than what we have in the database.
                 // Use the sql lower function to make the groupName attribute all lower-case, which will come in handy for comparison with the user's input.
                 String stmt = "SELECT publisherName, publisherAddress, publisherPhone, publisherEmail FROM publishers where lower(publisherName) = ?";
+                
                 // Create PreparedStatement object.
                 PreparedStatement pstmt = connection.prepareStatement(stmt);
 
@@ -542,7 +554,8 @@ public class JDBCProject {
                             displayNull(publisherEmail));
                     askAgain = false;
                 } else {
-                    System.out.println("The publisher name " + userInput + " does not exist.\nEnter a different publisher name.");
+                    // Give user the option to enter a different publisher name, or quit listByPublisher altogether.
+                    System.out.println("The publisher name '" + userInput + "' does not exist.");
                 }
                 // STEP 6: Clean-up environment
                 resultSet.close();
@@ -557,13 +570,11 @@ public class JDBCProject {
      * 
      * @param connection - The connection session to the database.
      */
-    // TODO: handle non-existent group name, publisher name errors.
-    // TODO: handle primary key violation.
     private static void insertNewBook(Connection connection) {
- 
         boolean askAgain = true;
         while (askAgain) {
             try {
+                System.out.println("\nEnter '-1' at any time to go back to the main menu.");
                 // stmt has bind variables (?).
                 String stmt = "INSERT INTO books(groupName, bookTitle, publisherName, yearPublished, numberPages) "
                         + "VALUES (?, ?, ?, ?, ?)";
@@ -574,26 +585,43 @@ public class JDBCProject {
                 Scanner in = new Scanner(System.in);
                 System.out.print("Group name: ");
                 String userGroupName = in.nextLine();
+                if(userGroupName.equals("-1")) {
+                    break;
+                }
                 // Bind the variable.
                 pstmt.setString(1, userGroupName);
 
+                // Prompt the user to enter the book title.
                 System.out.print("Book title: ");
                 String userBookTitle = in.nextLine();
+                if(userBookTitle.equals("-1")) {
+                    break;
+                }
                 pstmt.setString(2, userBookTitle); 
 
+                // Prompt the user to enter the publisher name.
                 System.out.print("Publisher name: ");
                 String userPublisherName = in.nextLine();
+                if(userPublisherName.equals("-1")) {
+                    break;
+                }
                 pstmt.setString(3, userPublisherName);
-
+                
+                // Prompt the user to enter the year published.
                 System.out.print("Year published: ");
                 int userYearPublished = in.nextInt();
+                if(userYearPublished == -1) {
+                    break;
+                }
                 pstmt.setInt(4, userYearPublished);
 
-
+                // Prompt the user to enter the number of pages.
                 System.out.print("Number of pages: ");
                 int userNumOfPages = in.nextInt();
+                if(userNumOfPages == -1) {
+                    break;
+                }
                 pstmt.setInt(5, userNumOfPages);
-                
                 
                 int rowCount = pstmt.executeUpdate();
                 
@@ -621,21 +649,21 @@ public class JDBCProject {
                         String publisherName = resultSet.getString("publisherName");
                         String yearPublished= resultSet.getString("yearPublished");
                         String numberPages= resultSet.getString("numberPages");
-                        
-                        
-                        
+ 
                         // Display values
                         System.out.printf(DISPLAY_BOOKS,
                                 displayNull(groupName), displayNull(bookTitle), displayNull(publisherName),
                                 displayNull(yearPublished), displayNull(numberPages));
-                    } else {
-                        System.out.println("The insertion was unsuccessful.");
-                    }
-                    // STEP 6: Clean-up environment
+                    } 
+                    // Clean-up environment
                     resultSet.close();
                     pstmt.close();
+                    pstmt2.close();
+                } else {
+                    System.out.println("The insertion was unsuccessful.");
                 }
             } catch (SQLException ex) {
+                // Specify to the user the error that occurred.
                 if (ex.getMessage().contains("caused a violation of foreign key constraint 'BOOKS_FK01'")) {
                     System.out.println("The group name you entered does not exist. Try a different group name. Keep in mind that group names are case sensitive.");
                 } else if (ex.getMessage().contains("caused a violation of foreign key constraint 'BOOKS_FK02'")) {
@@ -644,10 +672,11 @@ public class JDBCProject {
                     System.out.println("There is already a row in the table with those primary key column (group name, book title) values.");
                 } else if (ex.getMessage().contains("The statement was aborted because it would have caused a duplicate key value in a unique or primary key constraint or unique index identified by 'BOOKS_CK' defined on 'BOOKS'.")) {
                     System.out.println("There is already a row in the table with those candidate key column (book title, publisher name) values.");
-                } 
-                else {
+                } else {
                     System.out.println(ex.getMessage());
                 }
+            } catch (InputMismatchException ime) {
+                System.out.println("Only integers are allowed for year published and number of pages. Please try again.");
             }
         }
     }

@@ -119,17 +119,14 @@ public class JDBCProject {
                                 // Writing Group inner-menu
                                 switch (wgResponse) {
                                     case 1:
-                                        // TODO: Call Chelsea's method
-                                        // ex: listAllWritingGroups()
                                         listAll(1, mStatement, mConnection);
                                         break;
 
                                     case 2:
-                                        // TODO: List by user input       
+                                        // CHELSEA TODO: List by user input       
                                         break;
 
                                     case 3:
-                                        // TODO: Return to main menu
                                         System.out.println("Returning to main menu\n");
                                         break;
 
@@ -166,23 +163,22 @@ public class JDBCProject {
 
                                 switch (pubResponse) {
                                     case 1:
-                                        // List all
                                         listAll(2, mStatement, mConnection);
                                         break;
 
                                     case 2:
-                                        // By pub
+                                        // CHELSEA TODO: By pub
                                         break;
 
                                     case 3:
-                                        // Insert new pub
+                                        // TODO: Insert new pub// Change pub
+                                        // TODO: Prompt who to replace, oldPub
+                                        // TODO: Prompt for new name, newPub
+                                        // TODO: Change all existing oldPub references to newPub
+                                        // TODO: DON'T REMOVE oldPub FROM THE DB
                                         break;
 
                                     case 4:
-                                        // Change pub
-                                        break;
-
-                                    case 5:
                                         // Return to main menu
                                         System.out.println("Returning to main menu");
                                         break;
@@ -319,13 +315,13 @@ public class JDBCProject {
                                                 System.out.println("Hmm...that book is not listed");
                                                 delayForEffect();
                                             }
-                                            
+
                                             mStatement.close();
 
                                         } catch (SQLException ex) {
                                             Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
                                         }
-                                        
+
                                         break;
 
                                     case 5:
@@ -512,8 +508,7 @@ public class JDBCProject {
         System.out.println("1. List all");
         System.out.println("2. List by publisher name");
         System.out.println("3. Insert a new publisher");
-        System.out.println("4. Change a publisher");
-        System.out.println("5. Main Menu");
+        System.out.println("4. Main Menu");
         System.out.print("Choice: ");
     }
 

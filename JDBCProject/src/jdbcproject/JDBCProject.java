@@ -171,7 +171,6 @@ public class JDBCProject {
                                 switch (pubResponse) {
                                     case 1:
                                         listAll(2, mStatement, mConnection);
-                                        pubRepeat = true;
                                         break;
 
                                     case 2:
@@ -310,16 +309,10 @@ public class JDBCProject {
             try {
                 // Execute a query.
                 statement = connection.createStatement();
-<<<<<<< HEAD
+
                 String sql = "SELECT groupName, headWriter, yearFormed, Subject FROM writingGroups order by groupName";
                 ResultSet resultSet = statement.executeQuery(sql);
-=======
-                String sql;
-                ResultSet resultSet;
 
-                sql = "SELECT groupName, headWriter, yearFormed, Subject FROM writingGroups order by groupName";
-                resultSet = statement.executeQuery(sql);
->>>>>>> master
                 System.out.println();
                 
                 // STEP 5: Extract data from the result set
@@ -382,21 +375,11 @@ public class JDBCProject {
             try {
                 // Execute a query.
                 statement = connection.createStatement();
-<<<<<<< HEAD
+
                 String sql = "SELECT bookTitle FROM books order by bookTitle";
                 ResultSet resultSet = statement.executeQuery(sql);
                 System.out.println();
-                
-=======
-                String sql;
-                ResultSet resultSet;
-                // sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
-                sql = "SELECT bookTitle, groupName, publisherName, yearPublished, numberPages "
-                        + "FROM books ORDER BY bookTitle";
-                resultSet = statement.executeQuery(sql);
-                System.out.println();
 
->>>>>>> master
                 // STEP 5: Extract data from the result set
                 System.out.printf(DISPLAY_BOOKTITLES, "Book Title");
                 
@@ -561,12 +544,7 @@ public class JDBCProject {
                 if (userInput.equals("q")) {
                     break;
                 }
-<<<<<<< HEAD
-                
-=======
 
-                // stmt has a bind variable (?).
->>>>>>> master
                 // The user may have entered a publisher name with casing that is different than what we have in the database.
                 // Use the sql lower function to make the publisherName attribute all lower-case, which will come in handy for comparison with the user's input.
                 String stmt = "SELECT publisherName, publisherAddress, publisherPhone, publisherEmail FROM publishers where lower(publisherName) = ?";
@@ -914,7 +892,7 @@ public class JDBCProject {
             bookTitle = stdin.nextLine();
 
             // Prepare statement
-            sql = "SELECT * FROM books WHERE bookTitle=?";
+            sql = "SELECT groupName, bookTitle, publisherName, yearPublished, numberPages FROM books WHERE bookTitle=?";
             pStmt = mConnection.prepareStatement(sql);
             pStmt.setString(1, bookTitle);
 

@@ -812,7 +812,7 @@ public class JDBCProject {
                             System.out.printf("Publisher %s has been successfully replaced by %s\n", reply, pubName);
                             delayForEffect();
                         } else {
-                            System.out.println("Unknown error");
+                            System.out.printf("Publisher %s has no books, so publisher %s could not possibly replace it.\n", pubName, reply);
                             delayForEffect();
                         }
 

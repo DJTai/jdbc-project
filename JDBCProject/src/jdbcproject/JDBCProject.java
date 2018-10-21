@@ -480,10 +480,9 @@ public class JDBCProject {
             while (askAgain) {
                 // Prompt the user to enter the group name of the writing group they want to view data for.
                 Scanner in = new Scanner(System.in);
-                System.out.print("\nEnter a group name or 'q' to go back to the main menu: ");
+                System.out.print("\nEnter a group name or 'q' to go back to the Writing Group menu: ");
                 String userInput = in.nextLine();
 
-                // User may go back to the main menu if they enter q.
                 if (userInput.equals("q")) {
                     break;
                 }
@@ -542,10 +541,9 @@ public class JDBCProject {
             while (askAgain) {
                 // Prompt the user to enter the publisher name of the publisher they want to view data for.
                 Scanner in = new Scanner(System.in);
-                System.out.print("\nEnter a publisher name or 'q' to go back to the main menu: ");
+                System.out.print("\nEnter a publisher name or 'q' to go back to the Publisher menu: ");
                 String userInput = in.nextLine();
 
-                // User may go back to the main menu if they enter q.
                 if (userInput.equals("q")) {
                     break;
                 }
@@ -602,7 +600,7 @@ public class JDBCProject {
         boolean askAgain = true;
         while (askAgain) {
             try {
-                System.out.println("\nEnter '-1' at any time to go back to the main menu.");
+                System.out.println("\nEnter '-1' at any time to go back to the Book menu.");
                 
                 String stmt = "INSERT INTO books(groupName, bookTitle, publisherName, yearPublished, numberPages) "
                         + "VALUES (?, ?, ?, ?, ?)";

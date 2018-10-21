@@ -126,11 +126,13 @@ public class JDBCProject {
                                 switch (wgResponse) {
                                     case 1:
                                         listAll(1, mStatement, mConnection);
+                                        wgRepeat = true;
                                         break;
 
                                     case 2:
                                         // List detail for a user-specified Writing Group
                                         listByGroup(mConnection);
+                                        wgRepeat = true;
                                         break;
 
                                     case 3:
@@ -171,11 +173,13 @@ public class JDBCProject {
                                 switch (pubResponse) {
                                     case 1:
                                         listAll(2, mStatement, mConnection);
+                                        pubRepeat = true;
                                         break;
 
                                     case 2:
                                         // List detail for a user-specified Publisher
                                         listByPublisher(mConnection);
+                                        pubRepeat = true;
                                         break;
 
                                     case 3:
@@ -244,6 +248,7 @@ public class JDBCProject {
                                     case 3:
                                         // Insert new book
                                         insertNewBook(mConnection);
+                                        bkRepeat = true;
                                         break;
 
                                     case 4:

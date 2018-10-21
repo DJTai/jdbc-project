@@ -47,6 +47,9 @@ public class JDBCProject {
         }
     }
 
+    /**
+     * Sets the credentials for accessing the database
+     */
     private static void getDBCredentials() {
         Scanner in = new Scanner(System.in);
 
@@ -126,12 +129,11 @@ public class JDBCProject {
                                         break;
 
                                     case 2:
-                                        // TODO: List by user input
+                                        // List detail for a user-specified Writing Group
                                         listByGroup(mConnection);
                                         break;
 
                                     case 3:
-                                        // TODO: Return to main menu
                                         System.out.println("Returning to main menu\n");
                                         break;
 
@@ -168,31 +170,39 @@ public class JDBCProject {
 
                                 switch (pubResponse) {
                                     case 1:
-                                        // List all
                                         listAll(2, mStatement, mConnection);
+                                        pubRepeat = true;
                                         break;
 
                                     case 2:
-                                        // By pub
+                                        // List detail for a user-specified Publisher
                                         listByPublisher(mConnection);
                                         break;
 
                                     case 3:
-                                        // Insert new pub
+                                        // Add a new Publisher and possibly replace a current Publisher
+                                        String publisher;
+
+                                        publisher = addNewPublisher(mConnection);  // Returns the new Publisher or -1
+
+                                        if (publisher.equals("-1")) {
+                                            System.out.println("Returning to main menu");
+                                            delayForEffect();
+                                        } else {
+                                            promptForPublisherReplacement(publisher, mConnection);
+                                        }
                                         break;
 
                                     case 4:
-                                        // Change pub
-                                        break;
-
-                                    case 5:
                                         // Return to main menu
                                         System.out.println("Returning to main menu");
+                                        delayForEffect();
                                         break;
 
                                     default:
                                         System.out.println("Invalid selection");
                                         pubRepeat = true;
+                                        delayForEffect();
                                         break;
                                 }
                             } catch (InputMismatchException ime) {
@@ -220,11 +230,16 @@ public class JDBCProject {
 
                                 switch (bkResponse) {
                                     case 1:
+                                        // List all
+                                        bkRepeat = true;
                                         listAll(3, mStatement, mConnection);
                                         break;
 
                                     case 2:
-                                        // List by book title
+                                        // List all info for a designated book
+                                        bkRepeat = true;
+                                        stdin.nextLine();
+                                        searchForBook(mConnection);
                                         break;
 
                                     case 3:
@@ -234,6 +249,8 @@ public class JDBCProject {
 
                                     case 4:
                                         // Remove a book
+                                        bkRepeat = true;
+                                        removeBook(mConnection);
                                         break;
 
                                     case 5:
@@ -244,7 +261,7 @@ public class JDBCProject {
                                     default:
                                         System.out.println("Invalid selection");
                                         delayForEffect();
-                                        pubRepeat = true;
+                                        bkRepeat = true;
                                         break;
                                 }
                             } catch (InputMismatchException ime) {
@@ -280,7 +297,8 @@ public class JDBCProject {
         }
     }
 
-    /** Lists all writing groups, publishers, or book titles.
+    /**
+     * Lists all writing groups, publishers, or book titles.
      *
      * @param userChoice - User's selection from the menu.
      * @param statement - SQL statement to be executed.
@@ -292,8 +310,16 @@ public class JDBCProject {
             try {
                 // Execute a query.
                 statement = connection.createStatement();
+<<<<<<< HEAD
                 String sql = "SELECT groupName, headWriter, yearFormed, Subject FROM writingGroups order by groupName";
                 ResultSet resultSet = statement.executeQuery(sql);
+=======
+                String sql;
+                ResultSet resultSet;
+
+                sql = "SELECT groupName, headWriter, yearFormed, Subject FROM writingGroups order by groupName";
+                resultSet = statement.executeQuery(sql);
+>>>>>>> master
                 System.out.println();
                 
                 // STEP 5: Extract data from the result set
@@ -356,10 +382,21 @@ public class JDBCProject {
             try {
                 // Execute a query.
                 statement = connection.createStatement();
+<<<<<<< HEAD
                 String sql = "SELECT bookTitle FROM books order by bookTitle";
                 ResultSet resultSet = statement.executeQuery(sql);
                 System.out.println();
                 
+=======
+                String sql;
+                ResultSet resultSet;
+                // sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
+                sql = "SELECT bookTitle, groupName, publisherName, yearPublished, numberPages "
+                        + "FROM books ORDER BY bookTitle";
+                resultSet = statement.executeQuery(sql);
+                System.out.println();
+
+>>>>>>> master
                 // STEP 5: Extract data from the result set
                 System.out.printf(DISPLAY_BOOKTITLES, "Book Title");
                 
@@ -368,8 +405,7 @@ public class JDBCProject {
                     String bookTitle = resultSet.getString("bookTitle");
 
                     // Display values
-                    System.out.printf(DISPLAY_BOOKTITLES,
-                            displayNull(bookTitle));
+                    System.out.printf(DISPLAY_BOOKTITLES, displayNull(bookTitle));
                 }
 
                 // STEP 6: Clean-up environment
@@ -379,7 +415,7 @@ public class JDBCProject {
                 Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    } 
+    }
     // end method
 
     /**
@@ -416,8 +452,7 @@ public class JDBCProject {
         System.out.println("1. List all");
         System.out.println("2. List by publisher name");
         System.out.println("3. Insert a new publisher");
-        System.out.println("4. Change a publisher");
-        System.out.println("5. Main Menu");
+        System.out.println("4. Main Menu");
         System.out.print("Choice: ");
     }
 
@@ -428,13 +463,16 @@ public class JDBCProject {
 
         System.out.println("\n-- BOOKS MENU -- ");
         System.out.println("1. List all");
-        System.out.println("2. List by book title");
+        System.out.println("2. Search by book title");
         System.out.println("3. Insert a new book");
-        System.out.println("4. Remove a current book");
+        System.out.println("4. Remove an existing book");
         System.out.println("5. Main Menu");
         System.out.print("Choice: ");
     }
 
+    /**
+     * Delays the thread for 1.5 seconds
+     */
     private static void delayForEffect() {
         try {
             Thread.sleep(1500);
@@ -443,8 +481,9 @@ public class JDBCProject {
         }
     }
 
-    /** Lists all the data for a group specified by the user.
-     * 
+    /**
+     * Lists all the data for a group specified by the user.
+     *
      * @param connection - The connection session with the database.
      */
     private static void listByGroup(Connection connection) {
@@ -455,9 +494,9 @@ public class JDBCProject {
                 Scanner in = new Scanner(System.in);
                 System.out.print("\nEnter a group name or 'q' to go back to the main menu: ");
                 String userInput = in.nextLine();
-                
+
                 // User may go back to the main menu if they enter q.
-                if(userInput.equals("q")) {
+                if (userInput.equals("q")) {
                     break;
                 }
 
@@ -477,7 +516,7 @@ public class JDBCProject {
                 
                 if (resultSet.next()) {
                     System.out.printf(DISPLAY_WRITING_GROUPS, "Group Name", "Head Writer", "Year Formed",
-                        "Subject");
+                            "Subject");
 
                     // Retrieve by column name
                     String groupName = resultSet.getString("groupName");
@@ -503,9 +542,10 @@ public class JDBCProject {
             System.out.println(ex.getMessage());
         }
     }
-    
-    /** List all the data for a publisher specified by the user.
-     * 
+
+    /**
+     * List all the data for a publisher specified by the user.
+     *
      * @param connection - The connection session to the database.
      */
     private static void listByPublisher(Connection connection) {
@@ -518,14 +558,19 @@ public class JDBCProject {
                 String userInput = in.nextLine();
 
                 // User may go back to the main menu if they enter q.
-                if(userInput.equals("q")) {
+                if (userInput.equals("q")) {
                     break;
                 }
+<<<<<<< HEAD
                 
+=======
+
+                // stmt has a bind variable (?).
+>>>>>>> master
                 // The user may have entered a publisher name with casing that is different than what we have in the database.
                 // Use the sql lower function to make the publisherName attribute all lower-case, which will come in handy for comparison with the user's input.
                 String stmt = "SELECT publisherName, publisherAddress, publisherPhone, publisherEmail FROM publishers where lower(publisherName) = ?";
-                
+
                 // Create PreparedStatement object.
                 PreparedStatement pstmt = connection.prepareStatement(stmt);
 
@@ -535,16 +580,16 @@ public class JDBCProject {
                 ResultSet resultSet = pstmt.executeQuery();
 
                 System.out.println();
-                
+
                 if (resultSet.next()) {
                     System.out.printf(DISPLAY_PUBLISHERS, "Publisher Name", "Publisher Address", "Publisher Phone",
-                        "Publisher Email");
+                            "Publisher Email");
 
                     // Retrieve by column name
                     String publisherName = resultSet.getString("publisherName");
                     String publisherAddress = resultSet.getString("publisherAddress");
                     String publisherPhone = resultSet.getString("publisherPhone");
-                    String publisherEmail= resultSet.getString("publisherEmail");
+                    String publisherEmail = resultSet.getString("publisherEmail");
 
                     // Display values
                     System.out.printf(DISPLAY_PUBLISHERS,
@@ -564,9 +609,10 @@ public class JDBCProject {
             Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    /** Insert a new book into the database.
-     * 
+
+    /**
+     * Insert a new book into the database.
+     *
      * @param connection - The connection session to the database.
      */
     private static void insertNewBook(Connection connection) {
@@ -580,12 +626,12 @@ public class JDBCProject {
                 
                 // Create PreparedStatement object.
                 PreparedStatement pstmt = connection.prepareStatement(stmt);
-                
+
                 // Prompt the user to enter the group name.
                 Scanner in = new Scanner(System.in);
                 System.out.print("Group name: ");
                 String userGroupName = in.nextLine();
-                if(userGroupName.equals("-1")) {
+                if (userGroupName.equals("-1")) {
                     break;
                 }
                 // Bind the variable.
@@ -594,23 +640,23 @@ public class JDBCProject {
                 // Prompt the user to enter the book title.
                 System.out.print("Book title: ");
                 String userBookTitle = in.nextLine();
-                if(userBookTitle.equals("-1")) {
+                if (userBookTitle.equals("-1")) {
                     break;
                 }
-                pstmt.setString(2, userBookTitle); 
+                pstmt.setString(2, userBookTitle);
 
                 // Prompt the user to enter the publisher name.
                 System.out.print("Publisher name: ");
                 String userPublisherName = in.nextLine();
-                if(userPublisherName.equals("-1")) {
+                if (userPublisherName.equals("-1")) {
                     break;
                 }
                 pstmt.setString(3, userPublisherName);
-                
+
                 // Prompt the user to enter the year published.
                 System.out.print("Year published: ");
                 int userYearPublished = in.nextInt();
-                if(userYearPublished == -1) {
+                if (userYearPublished == -1) {
                     break;
                 }
                 pstmt.setInt(4, userYearPublished);
@@ -618,43 +664,43 @@ public class JDBCProject {
                 // Prompt the user to enter the number of pages.
                 System.out.print("Number of pages: ");
                 int userNumOfPages = in.nextInt();
-                if(userNumOfPages == -1) {
+                if (userNumOfPages == -1) {
                     break;
                 }
                 pstmt.setInt(5, userNumOfPages);
-                
+
                 int rowCount = pstmt.executeUpdate();
-                
+
                 System.out.println();
-                
+
                 if (rowCount >= 1) {
                     askAgain = false;
                     System.out.println("Book successfully inserted.");
-                    
+
                     String stmt2 = "SELECT groupName, bookTitle, publisherName, yearPublished, numberPages from books where groupName = ? AND bookTitle = ?";
                     PreparedStatement pstmt2 = connection.prepareStatement(stmt2);
-                    
+
                     // Bind the variable.
                     pstmt2.setString(1, userGroupName);
                     pstmt2.setString(2, userBookTitle);
                     ResultSet resultSet = pstmt2.executeQuery();
-                    
+
                     if (resultSet.next()) {
                         System.out.printf(DISPLAY_BOOKS, "Group Name", "Book Title", "Publisher Name",
                                 "Year Published", "Number Of Pages");
-                        
+
                         // Retrieve by column name
                         String groupName = resultSet.getString("groupName");
                         String bookTitle = resultSet.getString("bookTitle");
                         String publisherName = resultSet.getString("publisherName");
-                        String yearPublished= resultSet.getString("yearPublished");
-                        String numberPages= resultSet.getString("numberPages");
- 
+                        String yearPublished = resultSet.getString("yearPublished");
+                        String numberPages = resultSet.getString("numberPages");
+
                         // Display values
                         System.out.printf(DISPLAY_BOOKS,
                                 displayNull(groupName), displayNull(bookTitle), displayNull(publisherName),
                                 displayNull(yearPublished), displayNull(numberPages));
-                    } 
+                    }
                     // Clean-up environment
                     resultSet.close();
                     pstmt.close();
@@ -678,6 +724,239 @@ public class JDBCProject {
             } catch (InputMismatchException ime) {
                 System.out.println("Only integers are allowed for year published and number of pages. Please try again.");
             }
+        }
+    }
+
+    /**
+     * Adds a new Publisher to the Publishers table
+     *
+     * @param connection - The connection session to the database
+     */
+    private static String addNewPublisher(Connection connection) {
+
+        String pubName = null;
+        boolean repeat;
+
+        do {
+            repeat = false;
+
+            try {
+                Scanner stdin = new Scanner(System.in);
+
+                PreparedStatement pStmt;
+                String sql;
+
+                // Publisher data
+                String pubAddress, pubPhone, pubEmail;
+
+                // Execute a query.
+                System.out.println("\nADDING A PUBLISHER");
+                System.out.print("What is the name of the Publisher?: ");
+                pubName = stdin.nextLine();
+
+                System.out.print("What is the Publisher's address?: ");
+                pubAddress = stdin.nextLine();
+
+                System.out.print("What is the Publisher's phone number?\n");
+                System.out.print("(Format: ###-###-####): ");
+                pubPhone = stdin.nextLine();
+
+                System.out.print("What is the Publisher's email?: ");
+                pubEmail = stdin.nextLine();
+
+                // Prepare statement
+                sql = "INSERT INTO publishers(publisherName, publisherAddress,"
+                        + "publisherPhone, publisherEmail) VALUES (?, ?, ?, ?)";
+                pStmt = connection.prepareStatement(sql);
+                pStmt.setString(1, pubName);
+                pStmt.setString(2, pubAddress);
+                pStmt.setString(3, pubPhone);
+                pStmt.setString(4, pubEmail);
+
+                if (pStmt.executeUpdate() >= 1) {
+                    System.out.println("Publisher successfully added");
+                    delayForEffect();
+                } else {
+                    System.out.println("Something went wrong...");
+                    delayForEffect();
+                }
+
+                pStmt.close();
+
+            } catch (SQLIntegrityConstraintViolationException constraintEx) {
+                // Primary key constraint violation!
+                System.out.println("That Publisher already exists in the database");
+                delayForEffect();
+                repeat = true;
+
+            } catch (SQLException ex) {
+                Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
+
+            }
+        } while (repeat);
+
+        return pubName;
+    }
+
+    private static void promptForPublisherReplacement(String pubName, Connection connection) {
+        Scanner stdin = new Scanner(System.in);
+
+        String reply;
+        char replyLetter;
+        boolean repeat;
+
+        do {
+            repeat = false;
+
+            System.out.println("Is this Publisher replacing a current one?");
+            System.out.print("(Type 'y' or 'n'): ");
+            reply = stdin.nextLine();
+            replyLetter = reply.charAt(0);
+
+            switch (replyLetter) {
+                case 'y':
+                case 'Y':
+                    // Replace old Pub with a new Pub
+                    System.out.printf("Which Publisher did %s replace?: ", pubName);
+                    reply = stdin.nextLine();
+
+                    try {
+                        PreparedStatement pStmt;
+                        String sql = "UPDATE books SET publisherName = ? WHERE publisherName = ?";
+                        pStmt = connection.prepareStatement(sql);
+                        pStmt.setString(1, pubName);
+                        pStmt.setString(2, reply);
+
+                        if (pStmt.executeUpdate() >= 1) {
+                            System.out.printf("Publisher %s has been successfully replaced by %s\n", reply, pubName);
+                            delayForEffect();
+                        } else {
+                            System.out.println("Unknown error");
+                            delayForEffect();
+                        }
+
+                        pStmt.close();
+
+                    } catch (SQLException sqle) {
+                        Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, sqle);
+                    }
+
+                    delayForEffect();
+                    break;
+
+                case 'n':
+                case 'N':
+                    System.out.println("Going back to main menu");
+                    delayForEffect();
+                    break;
+
+                default:
+                    System.out.println("Invalid option");
+                    repeat = true;
+                    break;
+            }
+        } while (repeat);
+    }
+
+    /**
+     * Removes a user-specified book from the database
+     * 
+     * @param connection - Connection to the database
+     */
+    private static void removeBook(Connection connection) {
+        Scanner stdin = new Scanner(System.in);
+
+        try {
+            PreparedStatement pStmt;
+            String bookTitle, sql;
+
+            // Execute a query.
+            System.out.println("\nREMOVING A BOOK");
+            System.out.print("What is the book title?: ");
+            bookTitle = stdin.nextLine();
+
+            // Prepare statement
+            sql = "DELETE FROM books WHERE bookTitle=?";
+            pStmt = connection.prepareStatement(sql);
+            pStmt.setString(1, bookTitle);
+
+            if (pStmt.executeUpdate() == 1) {
+                System.out.println("Book successfully removed");
+                delayForEffect();
+            } else {
+                System.out.println("Hmm...that book is not listed");
+                delayForEffect();
+            }
+
+            pStmt.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Retrieves data for a user-specified book
+     * 
+     * @param mConnection - Connection to the database
+     */
+    private static void searchForBook(Connection mConnection) {
+        Scanner stdin = new Scanner(System.in);
+
+        try {
+            ResultSet resultSet;
+            PreparedStatement pStmt;
+            String bookTitle, sql;
+
+            // Execute a query.
+            System.out.println("\nSEARCHING FOR A BOOK");
+            System.out.print("What is the book title?: ");
+            bookTitle = stdin.nextLine();
+
+            // Prepare statement
+            sql = "SELECT * FROM books WHERE bookTitle=?";
+            pStmt = mConnection.prepareStatement(sql);
+            pStmt.setString(1, bookTitle);
+
+            resultSet = pStmt.executeQuery();
+
+            // Execute only if data exists
+            if (resultSet.next()) {
+                do {
+                    System.out.printf("\n%-30s%-30s%-24s%-8s%-14s\n",
+                            "BOOK TITLE",
+                            "WRITING GROUP",
+                            "PUBLISHER",
+                            "YEAR",
+                            "NUM. OF PAGES");
+
+                    // Retrieve by column name
+                    String bkTitle = resultSet.getString("bookTitle");
+                    String bkGroupName = resultSet.getString("groupName");
+                    String bkPubName = resultSet.getString("publisherName");
+                    int bkYearPublished = resultSet.getInt("yearPublished");
+                    int bkNumOfPages = resultSet.getInt("numberPages");
+
+                    // Display values
+                    System.out.printf("%-30s%-30s%-24s%-8d%-14d\n",
+                            displayNull(bkTitle),
+                            displayNull(bkGroupName),
+                            displayNull(bkPubName),
+                            bkYearPublished,
+                            bkNumOfPages);
+
+                } while (resultSet.next());
+
+            } else {
+                System.out.println("Hmm...that book is not listed");
+                delayForEffect();
+            }
+
+            resultSet.close();
+            pStmt.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JDBCProject.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

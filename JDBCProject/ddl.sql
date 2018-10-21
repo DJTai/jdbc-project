@@ -1,4 +1,4 @@
--- Table publishers holds a publisher's name, their address, their phone number, and their email address.
+-- Holds a publisher's name, their address, their phone number, and their email address.
 CREATE TABLE publishers (
 	publisherName VARCHAR(40) NOT NULL, -- Name of the publisher
 	publisherAddress VARCHAR(50) NOT NULL, -- Address of the publisher
@@ -64,6 +64,7 @@ VALUES ('Marvel Comics', '500 Marvelous Way', '917-555-1234', 'marvel@marvel.com
 ('Philosophers Stone', '1000 Rocky Road', '868-565-3434', 'philosopers@stonepub.org'),
 ('Wolters Kluwer', '20101 Hamilton Ave', '310-324-3019', 'wolters.kluwer@gmail.com');
 
+-- Test values for BOOKS table
 INSERT INTO books(groupName, bookTitle, publisherName, yearPublished, numberPages)
 VALUES ('Riders Block', 'Writing Derby', 'No Starch Press', 2018, 300),
 ('Avengers Writers', 'Secret Avengers', 'Marvel Comics', 2011, 40),
@@ -73,4 +74,6 @@ VALUES ('Riders Block', 'Writing Derby', 'No Starch Press', 2018, 300),
 ('Left on Read', 'Singularity: Rise of the Humans', 'Philosophers Stone', 2017, 276),
 ('Comment Blocks', 'Writing Less Code With Kotlin', 'No Starch Press', 2018, 222);
 
-
+-- drop table books;
+-- drop table publishers;
+-- drop table writinggroups;

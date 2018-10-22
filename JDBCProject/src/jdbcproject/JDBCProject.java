@@ -37,7 +37,7 @@ public class JDBCProject {
      * Group, Title, Publisher, Year Published, No. of Pages, Head Writer, Year Formed, Subj., Pub. Address, Pub. Phone
      * #, Pub. Email
      */
-    static final String DISPLAY_BOOKS_SPECIFIC = "%-30s%-30s%-30s%-20s%-20s%-30s%-15s%-20s%-50s%-20s%-40s\n";
+    static final String DISPLAY_BOOKS_SPECIFIC = "%-30s%-30s%-30s%-20s%-20s%-30s%-15s%-20s%-40s%-20s%-40s\n";
 
     /**
      * @param args the command line arguments
@@ -462,7 +462,6 @@ public class JDBCProject {
             }
         }
     }
-    // end method
 
     /**
      * Lists all the data for a group specified by the user.
@@ -742,8 +741,7 @@ public class JDBCProject {
 
                 // Execute a query.
                 System.out.println("\nSEARCHING FOR A BOOK");
-                System.out.print("What is the book title?: ");
-                System.out.print("\nEnter a book title ('q' to quit): ");
+                System.out.print("Enter a book title ('q' to quit): ");
                 bookTitle = stdin.nextLine();
 
                 if (bookTitle.equalsIgnoreCase("Q")) {
@@ -786,14 +784,18 @@ public class JDBCProject {
                         String bkPubName = resultSet.getString("publisherName");
                         int bkYearPublished = resultSet.getInt("yearPublished");
                         int bkNumOfPages = resultSet.getInt("numberPages");
+                        String wgHeadWriter = resultSet.getString("headWriter");
+                        int yearFormed = resultSet.getInt("yearFormed");
+                        String wgSubject = resultSet.getString("subject");
+                        String pubAddress = resultSet.getString("publisherAddress");
+                        String pubPhoneNum = resultSet.getString("publisherPhone");
+                        String pubEmail = resultSet.getString("publisherEmail");
 
                         // Display values
-                        System.out.printf("%-30s%-30s%-24s%-8d%-14d\n",
-                                displayNull(bkTitle),
-                                displayNull(bkGroupName),
-                                displayNull(bkPubName),
-                                bkYearPublished,
-                                bkNumOfPages);
+                        System.out.printf("%-30s%-30s%-30s%-20d%-20d%-30s%-15d%-20s%-40s%-20s%-40s\n",
+                                displayNull(bkTitle), displayNull(bkGroupName), displayNull(bkPubName), bkYearPublished,
+                                bkNumOfPages, displayNull(wgHeadWriter), yearFormed, displayNull(wgSubject),
+                                displayNull(pubAddress), displayNull(pubPhoneNum), displayNull(pubEmail));
 
                     } while (resultSet.next());
 

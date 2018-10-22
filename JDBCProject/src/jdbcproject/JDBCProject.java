@@ -942,23 +942,27 @@ public class JDBCProject {
 
         try {
             PreparedStatement pStmt;
-            String bookTitle, sql;
+            String bookTitle, bookGroup, sql;
 
             // Execute a query.
             System.out.println("\nREMOVING A BOOK");
             System.out.print("What is the book title?: ");
             bookTitle = stdin.nextLine();
+            
+            System.out.printf("...and which group wrote %s?: ", bookTitle);
+            bookGroup = stdin.nextLine();
 
             // Prepare statement
-            sql = "DELETE FROM books WHERE bookTitle=?";
+            sql = "DELETE FROM books WHERE bookTitle=? AND groupName=?";
             pStmt = connection.prepareStatement(sql);
             pStmt.setString(1, bookTitle);
+            pStmt.setString(2, bookGroup);
 
             if (pStmt.executeUpdate() == 1) {
-                System.out.println("Book successfully removed");
+                System.out.printf("Successfully removed %s written by the group %s\n", bookTitle, bookGroup);
                 delayForEffect();
             } else {
-                System.out.println("Hmm...that book is not listed");
+                System.out.printf("Hmm...can't find %s written by group %s\n", bookTitle, bookGroup);
                 delayForEffect();
             }
 

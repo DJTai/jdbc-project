@@ -4,17 +4,7 @@ JDBC Project for CECS 323. For a more detailed requirements listing, click [here
 
 
 ### ToDo
-- [x] Create a `.sql` file for the DDL and run the script to create the DB, tabes, etc.
-- [x] Write a JDBC program to support the following functions:
-    - [x] List all writing groups
-    - [x] List all the data for a group specified by the user
-    - [x] List all publishers
-    - [x] List all the data for a publisher specified by the user
-    - [x] List all book titles
-    - [x] List all the data for a book specified by the user
-    - [x] Insert a new book
-    - [x] Insert a new publisher and update all *books* published by one publisher to be published by the new publisher. Leave the old publisher name, just modify the books that they have published. Assume that the new publisher has bought out the old one, so now any books published by the old publisher are published by the new one
-    - [x] Remove a book specified by the user
+N/A
 
 *NOTE*:
 - For all queries involving use rinput, you MUST use prepared statements
